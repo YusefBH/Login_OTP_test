@@ -17,6 +17,7 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'national_code' => '136'.rand(1000000, 9999999),
             'phone_number' => '0914'.rand(1000000, 9999999),
+            'password' => 'password',
         ];
     }
 }

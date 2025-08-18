@@ -17,4 +17,14 @@ class User extends Authenticatable
         'national_code',
         'phone_number',
     ];
+    protected $hidden = [
+        'password',
+    ];
+
+    protected function casts(): array
+    {
+        return [
+            'password' => 'hashed',
+        ];
+    }
 }

@@ -12,6 +12,7 @@ return new class extends Migration {
             $table->string('name');
             $table->string('last_name');
             $table->string('national_code')->unique();
+            $table->string('password');
             $table->string('phone_number')->unique();
             $table->softDeletes();
             $table->timestamps();
