@@ -2,6 +2,7 @@
 
 namespace App\Services\Actions;
 
+use App\Enums\UserStatus;
 use App\Jobs\SendOtpSmsJob;
 use App\Models\User;
 use App\Services\Contracts\SubmitLoginInterface;
@@ -9,12 +10,12 @@ use Illuminate\Support\Facades\Cache;
 
 class SubmitLoginConcrete implements SubmitLoginInterface
 {
-    public function submitLogin(string $phone_number): string
+    public function submitLogin(string $phone_number): UserStatus
     {
         $flag = User::where('phone_number', $phone_number)->exists();
 
         if ($flag) {
-            return 'login.password.form';
+            return UserStatus::EXISTS;
         } else {
             $otpCode = rand(10000, 99999);
 
@@ -22,7 +23,7 @@ class SubmitLoginConcrete implements SubmitLoginInterface
 
             SendOtpSmsJob::dispatch($phone_number, $otpCode);
 
-            return 'register.otp.form';
+            return UserStatus::NEW;
         }
     }
 }

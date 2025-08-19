@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\RegisterDTO;
+use App\Enums\UserStatus;
+use App\Exceptions\ExpiredOtpException;
+use App\Exceptions\InvalidOtpException;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\OtpRequest;
 use App\Http\Requests\Auth\PasswordRequest;
@@ -24,9 +27,13 @@ class AuthController extends Controller
 
     public function submitLogin(LoginRequest $request, SubmitLoginInterface $submitLogin)
     {
-        $routeName = $submitLogin->submitLogin($request->phone_number);
+        $userStatus = $submitLogin->submitLogin($request->phone_number);
         session(['phone_number' => $request->phone_number]);
-        return redirect(route($routeName, app()->getLocale()));
+        if ($userStatus == UserStatus::EXISTS) {
+            return redirect(route('login.password.form', app()->getLocale()));
+        } else {
+            return redirect(route('register.otp.form', app()->getLocale()));
+        }
     }
 
     public function showPasswordForm(Request $request)
@@ -67,7 +74,7 @@ class AuthController extends Controller
             );
 
             return redirect(route('register.complete.form', app()->getLocale()));
-        } catch (\Exception $e) {
+        } catch (ExpiredOtpException | InvalidOtpException $e) {
             return redirect()->back()->withErrors([
                 'otp' => $e->getMessage(),
             ]);
@@ -91,6 +98,7 @@ class AuthController extends Controller
 
         $user = $completeRegister->completeRegister($registerDto);
         Auth::login($user);
+        session()->forget(['phone_number', 'otp_verified']);
         return redirect(route('home', app()->getLocale()));
     }
 }

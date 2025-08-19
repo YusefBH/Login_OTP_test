@@ -14,17 +14,20 @@ Route::prefix('{locale?}')->middleware('web')->group(function () {
         });
 
         Route::middleware('guest')->prefix('register')->name('register.')->group(function () {
-            Route::get('/show-otp', 'showOtpForm')->name('otp.form');
+            Route::get('/show-otp', 'showOtpForm')->name('otp.form')
+                ->middleware('throttle:web');
             Route::post('/verify-otp', 'verifyOtpForm')->name('otp.verify');
-            Route::get('/complete', 'completeRegisterForm')->name('complete.form');
-            Route::post('/complete', 'completeRegister')->name('complete');
+            Route::get('/complete', 'completeRegisterForm')->name('complete.form')
+                ->middleware('otp.verified');
+            Route::post('/complete', 'completeRegister')->name('complete')
+                ->middleware('otp.verified');
         });
 
     });
 
     Route::middleware('auth')->group(function () {
         Route::get('/home', function () {
-            return 'home';
+            return 'hello  '.auth()->user()->name;
         })->name('home');
     });
 });

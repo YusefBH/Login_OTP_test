@@ -2,6 +2,8 @@
 
 namespace App\Services\Actions;
 
+use App\Exceptions\ExpiredOtpException;
+use App\Exceptions\InvalidOtpException;
 use App\Services\Contracts\VerifyOtpInterface;
 use Exception;
 use Illuminate\Support\Facades\Cache;
@@ -16,13 +18,15 @@ class VerifyOtpConcrete implements VerifyOtpInterface
         $realOtp = Cache::get('otp:'.$phone_number);
 
         if (!$realOtp) {
-            throw new \Exception(__('custom.expire_otp'));
+            throw new ExpiredOtpException(__('custom.expire_otp'));
         }
 
         if ($realOtp != $otp) {
-            throw new \Exception(__('custom.invalid_otp'));
+            throw new InvalidOtpException(__('custom.expire_otp'));
         }
 
         Cache::forget('otp:'.$phone_number);
+
+        session()->put('otp_verified', true);
     }
 }
