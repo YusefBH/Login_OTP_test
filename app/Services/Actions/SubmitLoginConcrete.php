@@ -3,9 +3,9 @@
 namespace App\Services\Actions;
 
 use App\Models\User;
-use App\Services\Contracts\AuthInterface;
+use App\Services\Contracts\SubmitLoginInterface;
 
-class AuthConcrete implements AuthInterface
+class SubmitLoginConcrete implements SubmitLoginInterface
 {
     public function submitLogin(string $phone_number): string
     {

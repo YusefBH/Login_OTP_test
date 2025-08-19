@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\Auth\LoginRequest;
-use App\Services\Contracts\AuthInterface;
+use App\Http\Requests\Auth\PasswordRequest;
+use App\Services\Contracts\SubmitLoginInterface;
+use App\Services\Contracts\SubmitPasswordInterface;
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
@@ -13,9 +17,34 @@ class AuthController extends Controller
         return view('auth.login');
     }
 
-    public function submitLogin(LoginRequest $request, AuthInterface $auth)
+    public function submitLogin(LoginRequest $request, SubmitLoginInterface $submitLogin)
     {
-        $routeName = $auth->submitLogin($request->phone_number);
-        return redirect(route($routeName));
+        $routeName = $submitLogin->submitLogin($request->phone_number);
+        session(['phone_number' => $request->phone_number]);
+        return redirect(route($routeName, app()->getLocale()));
+    }
+
+    public function showPasswordForm(Request $request)
+    {
+        return view('auth.password');
+    }
+
+    public function submitPassword(PasswordRequest $request, SubmitPasswordInterface $submitPassword)
+    {
+        try {
+            $user = $submitPassword->submitPassword(
+                phone_number: session('phone_number'),
+                password: $request->password
+            );
+            Auth::login($user);
+
+            return redirect(route('home' , app()->getLocale()));
+
+        } catch (AuthenticationException $e) {
+
+            return back()->withErrors([
+                'password' => $e->getMessage(),
+            ]);
+        }
     }
 }

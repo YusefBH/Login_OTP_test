@@ -2,7 +2,7 @@
 
 namespace App\Services\Contracts;
 
-interface AuthInterface
+interface SubmitLoginInterface
 {
     public function submitLogin(string $phone_number): string;
 }
