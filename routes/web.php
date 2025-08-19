@@ -15,8 +15,8 @@ Route::prefix('{locale?}')->middleware('web')->group(function () {
 
         Route::middleware('guest')->prefix('register')->name('register.')->group(function () {
             Route::get('/show-otp', 'showOtpForm')->name('otp.form');
-            //temp
-            Route::get('/verify-otp', function (){})->name('otp.verify');
+            Route::post('/verify-otp', 'verifyOtpForm')->name('otp.verify');
+            Route::get('/complete', 'completeRegisterForm')->name('complete.form');
         });
 
     });

@@ -199,6 +199,7 @@ return [
         'password' => 'گذرواژه',
         'password_confirmation' => 'تاییدیه گذرواژه',
         'city' => 'شهر',
+        'otp' => 'کد فعالسازی',
         'state' => 'استان',
         'country' => 'کشور',
         'address' => 'آدرس',

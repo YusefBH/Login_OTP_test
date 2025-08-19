@@ -196,6 +196,8 @@ return [
 
     'attributes' => [
         'phone_number' => 'phone number',
+        'otp' => 'verify code',
+
     ],
 
 ];
