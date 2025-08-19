@@ -178,7 +178,7 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-
+    'phone_number' => 'شماره موبایل',
     /*
     |--------------------------------------------------------------------------
     | Custom Validation Attributes
@@ -231,6 +231,7 @@ return [
         'link' => 'لینک',
         'mobile_number' => 'شماره تماس',
         'work_number' => 'شماره تماس ثابت',
+        'phone_number' => 'شماره موبایل'
     ],
 
 ];

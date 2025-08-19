@@ -182,10 +182,10 @@ return [
             'rule-name' => 'custom-message',
         ],
     ],
-
+    'phone_number' => 'phone number',
     /*
     |--------------------------------------------------------------------------
-    | Custom Validation Attributes
+    | Custom Validation Attributesphone_number
     |--------------------------------------------------------------------------
     |
     | The following language lines are used to swap our attribute placeholder
@@ -194,6 +194,8 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'phone_number' => 'phone number',
+    ],
 
 ];
