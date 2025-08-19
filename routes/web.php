@@ -12,6 +12,13 @@ Route::prefix('{locale?}')->middleware('web')->group(function () {
             Route::get('/password', 'showPasswordForm')->name('password.form');
             Route::post('/password', 'submitPassword')->name('password.submit');
         });
+
+        Route::middleware('guest')->prefix('register')->name('register.')->group(function () {
+            Route::get('/show-otp', 'showOtpForm')->name('otp.form');
+            //temp
+            Route::get('/verify-otp', function (){})->name('otp.verify');
+        });
+
     });
 
     Route::middleware('auth')->group(function (){

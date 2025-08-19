@@ -47,4 +47,9 @@ class AuthController extends Controller
             ]);
         }
     }
+
+    public function showOtpForm(Request $request)
+    {
+        return view('auth.otp');
+    }
 }
