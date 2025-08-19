@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\RegisterDTO;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Http\Requests\Auth\OtpRequest;
 use App\Http\Requests\Auth\PasswordRequest;
+use App\Http\Requests\Auth\RegisterRequest;
+use App\Services\Contracts\CompleteRegisterInterface;
 use App\Services\Contracts\SubmitLoginInterface;
 use App\Services\Contracts\SubmitPasswordInterface;
 use App\Services\Contracts\VerifyOtpInterface;
@@ -40,7 +43,7 @@ class AuthController extends Controller
             );
             Auth::login($user);
 
-            return redirect(route('home' , app()->getLocale()));
+            return redirect(route('home', app()->getLocale()));
 
         } catch (AuthenticationException $e) {
 
@@ -55,7 +58,7 @@ class AuthController extends Controller
         return view('auth.otp');
     }
 
-    public function verifyOtpForm(OtpRequest $request , VerifyOtpInterface $verifyOtp)
+    public function verifyOtpForm(OtpRequest $request, VerifyOtpInterface $verifyOtp)
     {
         try {
             $verifyOtp->verifyOtp(
@@ -63,8 +66,8 @@ class AuthController extends Controller
                 otp: $request->otp
             );
 
-            return redirect(route('register.complete.form' , app()->getLocale()));
-        }catch (\Exception $e){
+            return redirect(route('register.complete.form', app()->getLocale()));
+        } catch (\Exception $e) {
             return redirect()->back()->withErrors([
                 'otp' => $e->getMessage(),
             ]);
@@ -74,5 +77,20 @@ class AuthController extends Controller
     public function completeRegisterForm(Request $request)
     {
         return view('auth.register');
+    }
+
+    public function completeRegister(RegisterRequest $request, CompleteRegisterInterface $completeRegister)
+    {
+        $registerDto = new RegisterDTO(
+            name: $request->name,
+            last_name: $request->last_name,
+            national_code: $request->national_code,
+            phone_number: session('phone_number'),
+            password: $request->password
+        );
+
+        $user = $completeRegister->completeRegister($registerDto);
+        Auth::login($user);
+        return redirect(route('home', app()->getLocale()));
     }
 }

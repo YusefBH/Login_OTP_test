@@ -17,12 +17,13 @@ Route::prefix('{locale?}')->middleware('web')->group(function () {
             Route::get('/show-otp', 'showOtpForm')->name('otp.form');
             Route::post('/verify-otp', 'verifyOtpForm')->name('otp.verify');
             Route::get('/complete', 'completeRegisterForm')->name('complete.form');
+            Route::post('/complete', 'completeRegister')->name('complete');
         });
 
     });
 
-    Route::middleware('auth')->group(function (){
-        Route::get('/home', function (){
+    Route::middleware('auth')->group(function () {
+        Route::get('/home', function () {
             return 'home';
         })->name('home');
     });
